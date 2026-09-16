@@ -1,12 +1,10 @@
 import {
   HeadContent,
+  Link,
+  Outlet,
   Scripts,
   createRootRouteWithContext,
 } from '@tanstack/react-router'
-import { TanStackRouterDevtoolsPanel } from '@tanstack/react-router-devtools'
-import { TanStackDevtools } from '@tanstack/react-devtools'
-
-import TanStackQueryDevtools from '../integrations/tanstack-query/devtools'
 
 import appCss from '../styles.css?url'
 
@@ -27,7 +25,7 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
         content: 'width=device-width, initial-scale=1',
       },
       {
-        title: 'TanStack Start Starter',
+        title: 'Merkl Opportunity Explorer',
       },
     ],
     links: [
@@ -37,29 +35,55 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
       },
     ],
   }),
-  shellComponent: RootDocument,
+  component: RootComponent,
 })
 
-function RootDocument({ children }: { children: React.ReactNode }) {
+function RootComponent() {
   return (
     <html lang="en">
       <head>
         <HeadContent />
       </head>
-      <body>
-        {children}
-        <TanStackDevtools
-          config={{
-            position: 'bottom-right',
-          }}
-          plugins={[
-            {
-              name: 'Tanstack Router',
-              render: <TanStackRouterDevtoolsPanel />,
-            },
-            TanStackQueryDevtools,
-          ]}
-        />
+      <body className="bg-canvas text-foreground antialiased">
+        <div className="flex min-h-screen flex-col">
+          <header className="border-b border-line bg-canvas">
+            <div className="mx-auto flex w-full max-w-6xl items-center justify-between gap-6 px-4 py-4 sm:px-6">
+              <Link
+                className="font-semibold tracking-tight text-foreground transition hover:text-accent-hover focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent"
+                to="/opportunities"
+              >
+                Merkl Opportunity Explorer
+              </Link>
+              <nav aria-label="Primary navigation">
+                <Link
+                  activeProps={{ className: 'text-accent' }}
+                  className="text-sm font-medium text-secondary transition hover:text-foreground focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent"
+                  to="/opportunities"
+                >
+                  Opportunities
+                </Link>
+              </nav>
+            </div>
+          </header>
+
+          <main className="mx-auto w-full max-w-6xl flex-1 px-4 py-10 sm:px-6">
+            <Outlet />
+          </main>
+
+          <footer className="border-t border-line">
+            <div className="mx-auto w-full max-w-6xl px-4 py-4 text-sm text-muted sm:px-6">
+              Data provided by{' '}
+              <a
+                className="underline decoration-line-strong underline-offset-4 transition hover:text-accent-hover focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent"
+                href="https://merkl.xyz"
+                rel="noreferrer"
+                target="_blank"
+              >
+                Merkl
+              </a>
+            </div>
+          </footer>
+        </div>
         <Scripts />
       </body>
     </html>
