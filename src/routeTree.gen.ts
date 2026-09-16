@@ -11,6 +11,8 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as OpportunitiesIndexRouteImport } from './routes/opportunities/index'
+import { Route as ApiOpportunitiesIndexRouteImport } from './routes/api/opportunities/index'
+import { Route as ApiOpportunitiesOpportunityIdRouteImport } from './routes/api/opportunities/$opportunityId'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -22,31 +24,63 @@ const OpportunitiesIndexRoute = OpportunitiesIndexRouteImport.update({
   path: '/opportunities/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiOpportunitiesIndexRoute = ApiOpportunitiesIndexRouteImport.update({
+  id: '/api/opportunities/',
+  path: '/api/opportunities/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiOpportunitiesOpportunityIdRoute =
+  ApiOpportunitiesOpportunityIdRouteImport.update({
+    id: '/api/opportunities/$opportunityId',
+    path: '/api/opportunities/$opportunityId',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/opportunities/': typeof OpportunitiesIndexRoute
+  '/api/opportunities/$opportunityId': typeof ApiOpportunitiesOpportunityIdRoute
+  '/api/opportunities/': typeof ApiOpportunitiesIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/opportunities': typeof OpportunitiesIndexRoute
+  '/api/opportunities/$opportunityId': typeof ApiOpportunitiesOpportunityIdRoute
+  '/api/opportunities': typeof ApiOpportunitiesIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/opportunities/': typeof OpportunitiesIndexRoute
+  '/api/opportunities/$opportunityId': typeof ApiOpportunitiesOpportunityIdRoute
+  '/api/opportunities/': typeof ApiOpportunitiesIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/opportunities/'
+  fullPaths:
+    | '/'
+    | '/opportunities/'
+    | '/api/opportunities/$opportunityId'
+    | '/api/opportunities/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/opportunities'
-  id: '__root__' | '/' | '/opportunities/'
+  to:
+    | '/'
+    | '/opportunities'
+    | '/api/opportunities/$opportunityId'
+    | '/api/opportunities'
+  id:
+    | '__root__'
+    | '/'
+    | '/opportunities/'
+    | '/api/opportunities/$opportunityId'
+    | '/api/opportunities/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   OpportunitiesIndexRoute: typeof OpportunitiesIndexRoute
+  ApiOpportunitiesOpportunityIdRoute: typeof ApiOpportunitiesOpportunityIdRoute
+  ApiOpportunitiesIndexRoute: typeof ApiOpportunitiesIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -65,12 +99,28 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof OpportunitiesIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/opportunities/': {
+      id: '/api/opportunities/'
+      path: '/api/opportunities'
+      fullPath: '/api/opportunities/'
+      preLoaderRoute: typeof ApiOpportunitiesIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/opportunities/$opportunityId': {
+      id: '/api/opportunities/$opportunityId'
+      path: '/api/opportunities/$opportunityId'
+      fullPath: '/api/opportunities/$opportunityId'
+      preLoaderRoute: typeof ApiOpportunitiesOpportunityIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   OpportunitiesIndexRoute: OpportunitiesIndexRoute,
+  ApiOpportunitiesOpportunityIdRoute: ApiOpportunitiesOpportunityIdRoute,
+  ApiOpportunitiesIndexRoute: ApiOpportunitiesIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
