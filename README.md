@@ -1,183 +1,124 @@
-Welcome to your new TanStack Start app!
+# Merkl Opportunities
 
-# Getting Started
+A small SSR explorer for Merkl opportunities. It exposes opportunity list and detail endpoints through the application API, then presents them through a filtered list and detail page.
 
-To run this application:
+## Stack
+
+- TanStack Start and TanStack Router for file-based routes, SSR, server functions, and API handlers.
+- TanStack Query for route data, hydration, and client-side query caching.
+- React and Tailwind CSS for the UI.
+- Zod for request, URL search parameter, and Merkl response validation.
+- Vitest for focused unit tests around caching, mapping, validation, API errors, and query keys.
+
+## Getting Started
+
+Requirements: Node.js and pnpm. No environment variables are required; the Merkl API base URL is configured in the server client.
 
 ```bash
 pnpm install
 pnpm dev
 ```
 
-# Building For Production
+The development server runs on `http://localhost:3000`.
 
-To build this application for production:
+Useful checks:
 
 ```bash
+pnpm test
+pnpm typecheck
+pnpm lint
 pnpm build
 ```
 
-## Styling
+## Architecture
 
-This project uses [Tailwind CSS](https://tailwindcss.com/) for styling.
+The UI and public API share one opportunity service, so both use the same mapping and cache policy.
 
-### Removing Tailwind CSS
+```text
+SSR route loader / browser navigation
+  -> TanStack Query
+  -> TanStack Start server function
+  -> OpportunityService
+  -> MemoryCache
+  -> Merkl API
 
-If you prefer not to use Tailwind CSS:
-
-1. Remove the demo pages in `src/routes/demo/`
-2. Replace the Tailwind import in `src/styles.css` with your own styles
-3. Remove `tailwindcss()` from the plugins array in `vite.config.ts`
-4. Remove `@tailwindcss/vite` and `tailwindcss` from `package.json`
-
-
-
-## Routing
-
-This project uses [TanStack Router](https://tanstack.com/router) with file-based routing. Routes are managed as files in `src/routes`.
-
-### Adding A Route
-
-To add a new route to your application just add a new file in the `./src/routes` directory.
-
-TanStack will automatically generate the content of the route file for you.
-
-Now that you have two routes you can use a `Link` component to navigate between them.
-
-### Adding Links
-
-To use SPA (Single Page Application) navigation you will need to import the `Link` component from `@tanstack/react-router`.
-
-```tsx
-import { Link } from "@tanstack/react-router";
+GET /api/opportunities[/:id]
+  -> TanStack Start API handler
+  -> OpportunityService
+  -> MemoryCache
+  -> Merkl API
 ```
 
-Then anywhere in your JSX you can use it like so:
+`src/features/opportunities` contains UI components, app-facing DTOs, query options, server functions, and Zod schemas. Route files only compose those pieces and render route states.
 
-```tsx
-<Link to="/about">About</Link>
+`src/server/opportunities` owns the application service and HTTP error mapping. `src/server/merkl` owns upstream requests, response validation, and mapping from Merkl payloads to the smaller DTOs consumed by the UI. `src/server/cache` is a small generic in-memory cache used by the service.
+
+The Merkl client requests `/v4/opportunities/` for lists and `/v4/opportunities/:id/campaigns?campaigns=true` for details. It uses an 8-second timeout, validates successful payloads with Zod, and turns upstream failures into application errors before they reach the API layer.
+
+## Data Fetching & SSR
+
+Both frontend routes use a TanStack Router loader with `queryClient.ensureQueryData(...)`. The loader uses the same query options that the route component later consumes through `useSuspenseQuery`, so a direct request renders with data available during SSR instead of fetching only after mount.
+
+`setupRouterSsrQueryIntegration` connects the router and Query client. The server-populated Query cache is hydrated into the browser, where the matching `useSuspenseQuery` reads the same key. On client navigation, router loaders run again for the next route or URL state and call the corresponding TanStack Start server function; the frontend does not self-fetch the internal `/api` routes.
+
+The two server functions are `getOpportunityList` and `getOpportunityDetail`. They validate their input and call the shared service. The detail function converts a genuine Merkl 404 into TanStack Router's not-found state.
+
+## Caching
+
+There are two cache layers with separate responsibilities:
+
+- The server-side `MemoryCache`, owned by the singleton `OpportunityService`, caches list responses and detail responses for 60 seconds. It holds at most 100 completed entries, removes expired entries lazily, evicts the oldest entry at capacity, and deduplicates concurrent loads for the same key.
+- TanStack Query caches the application DTOs in the browser (and during SSR) for 60 seconds via `staleTime`.
+
+List cache keys are canonicalized from the normalized query using sorted `URLSearchParams`, for example `opportunities:list:action=LEND&chainId=1&...`. Detail keys use `opportunities:detail:<id>`. A server cache hit returns the mapped DTO immediately; a miss issues one Merkl request and stores the result. This avoids repeated upstream calls from both frontend navigation and the internal API routes while an entry is fresh.
+
+The server cache is process-local and intentionally simple. It is not shared between application instances and has no explicit invalidation mechanism beyond TTL expiry.
+
+## API
+
+`GET /api/opportunities`
+
+Returns a page of mapped opportunity summaries. Supported query parameters are `search`, `chainId`, `protocol`, `action`, `status`, `minimumTvl`, `sort`, `order`, and `page`. Invalid input returns a stable `400` error shape. The page size is fixed at 20.
+
+`GET /api/opportunities/:opportunityId`
+
+Returns one mapped opportunity detail including campaign information. The application accepts decimal IDs from 1 to 20 digits. Invalid IDs return `400`; a missing upstream opportunity returns `404`.
+
+## Filtering
+
+The list UI exposes search, chain, protocol, action, and a combined sort/order selector. Search is debounced by 350 ms; selects navigate immediately. The active state is stored in TanStack Router search parameters, with `status=LIVE`, `sort=apr`, `order=desc`, and `page=0` as defaults. Pagination updates only `page` while retaining the current filters.
+
+`opportunitySearchSchema` normalizes browser URL values and falls back field-by-field for invalid values. The stricter `opportunityListQuerySchema` validates server-function and HTTP API input before it reaches the service. The API also accepts `status` and `minimumTvl`, although they are not exposed as list UI controls.
+
+## Project Structure
+
+```text
+src/
+  routes/
+    opportunities/                 # SSR list and detail pages
+    api/opportunities/             # GET API routes
+  features/opportunities/
+    api/                           # TanStack Start server functions
+    components/                    # list, filters, detail UI
+    queries/                       # Query keys and options
+    schemas/                       # Zod input/search validation
+    types/                         # application DTOs
+  server/
+    opportunities/                 # shared service and HTTP handlers
+    merkl/                         # upstream client, schemas, mappers
+    cache/                         # TTL in-memory cache
+  integrations/tanstack-query/     # QueryClient router context
 ```
 
-This will create a link that will navigate to the `/about` route.
+## Trade-offs
 
-More information on the `Link` component can be found in the [Link documentation](https://tanstack.com/router/v1/docs/framework/react/api/router/linkComponent).
+- The cache is in-memory and process-local, which keeps the implementation small but does not coordinate multiple instances.
+- Pagination uses Merkl's page parameter and a fixed page size; there is no total result count.
+- The list controls cover the most useful filters for the UI. Additional supported API parameters remain available through the API but are not surfaced in the interface.
+- The app has no persistence, authentication, or deployment infrastructure; those are outside the case's scope.
 
-### Using A Layout
+## Possible Improvements
 
-In the File Based Routing setup the layout is located in `src/routes/__root.tsx`. Anything you add to the root route will appear in all the routes. The route content will appear in the JSX where you render `{children}` in the `shellComponent`.
-
-Here is an example layout that includes a header:
-
-```tsx
-import { HeadContent, Scripts, createRootRoute } from '@tanstack/react-router'
-
-export const Route = createRootRoute({
-  head: () => ({
-    meta: [
-      { charSet: 'utf-8' },
-      { name: 'viewport', content: 'width=device-width, initial-scale=1' },
-      { title: 'My App' },
-    ],
-  }),
-  shellComponent: ({ children }) => (
-    <html lang="en">
-      <head>
-        <HeadContent />
-      </head>
-      <body>
-        <header>
-          <nav>
-            <Link to="/">Home</Link>
-            <Link to="/about">About</Link>
-          </nav>
-        </header>
-        {children}
-        <Scripts />
-      </body>
-    </html>
-  ),
-})
-```
-
-More information on layouts can be found in the [Layouts documentation](https://tanstack.com/router/latest/docs/framework/react/guide/routing-concepts#layouts).
-
-## Server Functions
-
-TanStack Start provides server functions that allow you to write server-side code that seamlessly integrates with your client components.
-
-```tsx
-import { createServerFn } from '@tanstack/react-start'
-
-const getServerTime = createServerFn({
-  method: 'GET',
-}).handler(async () => {
-  return new Date().toISOString()
-})
-
-// Use in a component
-function MyComponent() {
-  const [time, setTime] = useState('')
-  
-  useEffect(() => {
-    getServerTime().then(setTime)
-  }, [])
-  
-  return <div>Server time: {time}</div>
-}
-```
-
-## API Routes
-
-You can create API routes by using the `server` property in your route definitions:
-
-```tsx
-import { createFileRoute } from '@tanstack/react-router'
-import { json } from '@tanstack/react-start'
-
-export const Route = createFileRoute('/api/hello')({
-  server: {
-    handlers: {
-      GET: () => json({ message: 'Hello, World!' }),
-    },
-  },
-})
-```
-
-## Data Fetching
-
-There are multiple ways to fetch data in your application. You can use TanStack Query to fetch data from a server. But you can also use the `loader` functionality built into TanStack Router to load the data for a route before it's rendered.
-
-For example:
-
-```tsx
-import { createFileRoute } from '@tanstack/react-router'
-
-export const Route = createFileRoute('/people')({
-  loader: async () => {
-    const response = await fetch('https://swapi.dev/api/people')
-    return response.json()
-  },
-  component: PeopleComponent,
-})
-
-function PeopleComponent() {
-  const data = Route.useLoaderData()
-  return (
-    <ul>
-      {data.results.map((person) => (
-        <li key={person.name}>{person.name}</li>
-      ))}
-    </ul>
-  )
-}
-```
-
-Loaders simplify your data fetching logic dramatically. Check out more information in the [Loader documentation](https://tanstack.com/router/latest/docs/framework/react/guide/data-loading#loader-parameters).
-
-
-
-# Learn More
-
-You can learn more about all of the offerings from TanStack in the [TanStack documentation](https://tanstack.com).
-
-For TanStack Start specific documentation, visit [TanStack Start](https://tanstack.com/start).
+- Add a shared cache implementation and invalidation strategy when running more than one application instance.
+- Add route-level integration tests for SSR, not-found, and filter-navigation flows.
+- Derive filter option lists from a maintained source instead of the small static UI catalog.
