@@ -57,7 +57,7 @@ The Merkl client requests `/v4/opportunities/` for lists and `/v4/opportunities/
 
 ## Data Fetching & SSR
 
-Both frontend routes use a TanStack Router loader with `queryClient.ensureQueryData(...)`. The loader uses the same query options that the route component later consumes through `useSuspenseQuery`, so a direct request renders with data available during SSR instead of fetching only after mount.
+Both frontend routes use a TanStack Router loader with `queryClient.query(...)`. The loader uses the same query options that the route component later consumes through `useSuspenseQuery`, so a direct request renders with data available during SSR instead of fetching only after mount.
 
 `setupRouterSsrQueryIntegration` connects the router and Query client. The server-populated Query cache is hydrated into the browser, where the matching `useSuspenseQuery` reads the same key. On client navigation, router loaders run again for the next route or URL state and call the corresponding TanStack Start server function; the frontend does not self-fetch the internal `/api` routes.
 

@@ -1,34 +1,36 @@
-import { useSuspenseQuery } from '@tanstack/react-query'
-import { createFileRoute, useRouter } from '@tanstack/react-router'
+import { useSuspenseQuery } from "@tanstack/react-query";
+import { createFileRoute, useRouter } from "@tanstack/react-router";
 
-import { OpportunityFilters } from '#/features/opportunities/components/opportunity-filters'
-import { OpportunityList } from '#/features/opportunities/components/opportunity-list'
+import { OpportunityFilters } from "#/features/opportunities/components/opportunity-filters";
+import { OpportunityList } from "#/features/opportunities/components/opportunity-list";
 import {
   normalizeOpportunityListQuery,
   opportunityListQueryOptions,
-} from '#/features/opportunities/queries/opportunity-queries'
-import { opportunitySearchSchema } from '#/features/opportunities/schemas/opportunity-query'
+} from "#/features/opportunities/queries/opportunity-queries";
+import { opportunitySearchSchema } from "#/features/opportunities/schemas/opportunity-query";
 
-export const Route = createFileRoute('/opportunities/')({
+export const Route = createFileRoute("/opportunities/")({
   validateSearch: opportunitySearchSchema,
   loaderDeps: ({ search }) => normalizeOpportunityListQuery(search),
   loader: ({ context, deps }) =>
-    context.queryClient.ensureQueryData(opportunityListQueryOptions(deps)),
+    context.queryClient.query({
+      ...opportunityListQueryOptions(deps),
+      staleTime: "static",
+    }),
   pendingMs: 300,
   pendingMinMs: 200,
   pendingComponent: OpportunitiesPending,
   errorComponent: OpportunitiesError,
   component: OpportunitiesPage,
-})
+});
 
 function OpportunitiesPage() {
-  const query = Route.useSearch()
-  const { data } = useSuspenseQuery(opportunityListQueryOptions(query))
+  const query = Route.useSearch();
+  const { data } = useSuspenseQuery(opportunityListQueryOptions(query));
 
   return (
     <section>
       <div className="mb-8">
-        <p className="text-sm font-medium text-accent">Opportunities</p>
         <h1 className="mt-2 text-3xl font-semibold tracking-tight text-foreground sm:text-4xl">
           Explore opportunities
         </h1>
@@ -43,8 +45,8 @@ function OpportunitiesPage() {
       <div className="mt-8">
         <h2 className="text-xl font-semibold text-foreground">Results</h2>
         <p className="mt-1 text-sm text-muted">
-          {data.items.length}{' '}
-          {data.items.length === 1 ? 'opportunity' : 'opportunities'} on this
+          {data.items.length}{" "}
+          {data.items.length === 1 ? "opportunity" : "opportunities"} on this
           page
         </p>
       </div>
@@ -53,7 +55,7 @@ function OpportunitiesPage() {
         <OpportunityList data={data} query={query} />
       </div>
     </section>
-  )
+  );
 }
 
 function OpportunitiesPending() {
@@ -71,11 +73,11 @@ function OpportunitiesPending() {
         ))}
       </div>
     </section>
-  )
+  );
 }
 
 function OpportunitiesError() {
-  const router = useRouter()
+  const router = useRouter();
 
   return (
     <section className="rounded-xl border border-line bg-surface px-6 py-12 text-center">
@@ -93,5 +95,5 @@ function OpportunitiesError() {
         Retry
       </button>
     </section>
-  )
+  );
 }

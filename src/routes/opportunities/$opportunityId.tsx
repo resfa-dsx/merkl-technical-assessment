@@ -18,9 +18,10 @@ export const Route = createFileRoute('/opportunities/$opportunityId')({
       throw notFound()
     }
 
-    return context.queryClient.ensureQueryData(
-      opportunityDetailQueryOptions(opportunityId.data),
-    )
+    return context.queryClient.query({
+      ...opportunityDetailQueryOptions(opportunityId.data),
+      staleTime: 'static',
+    })
   },
   pendingMs: 300,
   pendingMinMs: 200,
