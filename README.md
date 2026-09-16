@@ -12,7 +12,7 @@ A small SSR explorer for Merkl opportunities. It exposes opportunity list and de
 
 ## Getting Started
 
-Requirements: Node.js and pnpm. No environment variables are required; the Merkl API base URL is configured in the server client.
+Requirements: Node.js and pnpm. This project was developed with Node.js `v24.18.0` and pnpm `10.30.3`. No environment variables are required; the Merkl API base URL is configured in the server client.
 
 ```bash
 pnpm install
