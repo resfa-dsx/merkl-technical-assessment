@@ -122,7 +122,7 @@ export function OpportunityFilters({
   }
 
   return (
-    <div className="rounded-2xl border border-slate-800 bg-slate-900/70 p-4 shadow-sm shadow-black/20 sm:p-5">
+    <div className="rounded-xl border border-line bg-surface p-4 sm:p-5">
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-12">
         <FilterField className="md:col-span-2 lg:col-span-5" label="Search">
           <input
@@ -204,7 +204,7 @@ export function OpportunityFilters({
         </FilterField>
       </div>
 
-      <div className="mt-5 flex flex-col gap-4 border-t border-slate-800 pt-4 sm:flex-row sm:items-end sm:justify-between">
+      <div className="mt-5 flex flex-col gap-4 border-t border-line pt-4 sm:flex-row sm:items-end sm:justify-between">
         <FilterField className="w-full sm:max-w-56" label="Sort by">
           <select
             className={controlClassName}
@@ -220,7 +220,7 @@ export function OpportunityFilters({
         </FilterField>
 
         <button
-          className="min-h-11 self-start rounded-lg px-3 text-sm font-medium text-slate-300 transition hover:bg-slate-800 hover:text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-300 disabled:cursor-default disabled:opacity-40 disabled:hover:bg-transparent disabled:hover:text-slate-300 sm:self-auto"
+          className="min-h-11 self-start rounded-lg px-3 text-sm font-medium text-secondary transition hover:bg-elevated hover:text-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent disabled:cursor-default disabled:opacity-40 disabled:hover:bg-transparent disabled:hover:text-secondary sm:self-auto"
           disabled={!hasNonDefaultState}
           onClick={() => {
             setSearchValue('')
@@ -246,7 +246,7 @@ function FilterField({
 }) {
   return (
     <label className={className}>
-      <span className="mb-1.5 block text-sm font-medium text-slate-300">
+      <span className="mb-1.5 block text-sm font-medium text-secondary">
         {label}
       </span>
       {children}
@@ -255,4 +255,4 @@ function FilterField({
 }
 
 const controlClassName =
-  'min-h-11 w-full rounded-lg border border-slate-700 bg-slate-950 px-3 text-sm text-slate-100 outline-none transition focus:border-emerald-400 focus:ring-2 focus:ring-emerald-400/20'
+  'min-h-11 w-full rounded-lg border border-line bg-canvas px-3 text-sm text-foreground outline-none transition placeholder:text-muted hover:border-line-strong focus:border-accent focus:ring-2 focus:ring-accent/20'

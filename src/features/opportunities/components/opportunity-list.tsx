@@ -39,7 +39,7 @@ function OpportunityRow({ opportunity }: { opportunity: OpportunityListItem }) {
 
   return (
     <Link
-      className="group block rounded-xl border border-slate-800 bg-slate-900/70 p-4 transition hover:border-slate-700 hover:bg-slate-900 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-300"
+      className="group block rounded-xl border border-line bg-surface p-4 transition hover:border-line-strong hover:bg-elevated focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
       params={{ opportunityId: opportunity.id }}
       to="/opportunities/$opportunityId"
     >
@@ -47,10 +47,10 @@ function OpportunityRow({ opportunity }: { opportunity: OpportunityListItem }) {
         <div className="flex min-w-0 items-start gap-3.5">
           <ResourceIcon name={identity.name} src={identity.iconUrl} />
           <div className="min-w-0 flex-1">
-            <p className="truncate text-xs font-semibold uppercase tracking-wide text-slate-400">
+            <p className="truncate text-xs font-semibold uppercase tracking-wide text-secondary">
               {opportunity.protocol?.name ?? opportunity.chain.name}
             </p>
-            <h2 className="mt-1 line-clamp-2 font-semibold leading-snug text-white">
+            <h2 className="mt-1 line-clamp-2 font-semibold leading-snug text-foreground">
               {opportunity.name}
             </h2>
             <div className="mt-2.5 flex flex-wrap gap-1.5 text-xs">
@@ -75,7 +75,7 @@ function OpportunityRow({ opportunity }: { opportunity: OpportunityListItem }) {
           </div>
         </div>
 
-        <div className="grid grid-cols-2 gap-4 border-t border-slate-800 pt-4 sm:grid-cols-3 lg:contents">
+        <div className="grid grid-cols-2 gap-4 border-t border-line pt-4 sm:grid-cols-3 lg:contents">
           <Metric
             label="APR"
             primary
@@ -89,7 +89,7 @@ function OpportunityRow({ opportunity }: { opportunity: OpportunityListItem }) {
           />
         </div>
 
-        <span className="justify-self-end text-sm font-medium text-slate-500 transition group-hover:translate-x-0.5 group-hover:text-emerald-300 lg:justify-self-auto">
+        <span className="justify-self-end text-sm font-medium text-muted transition group-hover:translate-x-0.5 group-hover:text-accent-hover lg:justify-self-auto">
           View →
         </span>
       </article>
@@ -108,8 +108,8 @@ function Badge({
     <span
       className={
         accent
-          ? "rounded-full border border-emerald-500/30 bg-emerald-500/10 px-2 py-0.5 text-emerald-300"
-          : "rounded-full border border-slate-700 bg-slate-800/80 px-2 py-0.5 text-slate-300"
+          ? "rounded-full border border-positive/25 bg-positive/10 px-2 py-0.5 text-positive"
+          : "rounded-full border border-line bg-elevated px-2 py-0.5 text-secondary"
       }
     >
       {children}
@@ -130,9 +130,9 @@ function Metric({
 }) {
   return (
     <dl className={`min-w-0 lg:text-right ${className}`}>
-      <dt className="text-xs text-slate-500">{label}</dt>
+      <dt className="text-xs text-muted">{label}</dt>
       <dd
-        className={`mt-0.5 whitespace-nowrap font-semibold tabular-nums ${primary ? "text-xl text-emerald-300" : "text-sm text-slate-100"}`}
+        className={`mt-0.5 whitespace-nowrap font-semibold tabular-nums ${primary ? "text-xl text-positive" : "text-sm text-foreground"}`}
       >
         {value}
       </dd>
@@ -168,7 +168,7 @@ function Pagination({
         </Link>
       )}
 
-      <span className="text-sm tabular-nums text-slate-400">
+      <span className="text-sm tabular-nums text-muted">
         Page {query.page + 1}
       </span>
 
@@ -193,15 +193,15 @@ function Pagination({
 
 function EmptyOpportunities() {
   return (
-    <div className="rounded-2xl border border-dashed border-slate-700 bg-slate-900/40 px-6 py-14 text-center">
-      <h2 className="text-lg font-semibold text-white">
+    <div className="rounded-xl border border-dashed border-line-strong bg-surface px-6 py-14 text-center">
+      <h2 className="text-lg font-semibold text-foreground">
         No opportunities found
       </h2>
-      <p className="mx-auto mt-2 max-w-md text-sm text-slate-400">
+      <p className="mx-auto mt-2 max-w-md text-sm text-secondary">
         No opportunity matches the current filters. Try broadening your search.
       </p>
       <Link
-        className="mt-5 inline-flex min-h-11 items-center rounded-lg bg-slate-800 px-4 text-sm font-medium text-slate-100 hover:bg-slate-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-300"
+        className="mt-5 inline-flex min-h-11 items-center rounded-lg border border-line bg-elevated px-4 text-sm font-medium text-foreground transition hover:border-line-strong hover:bg-line focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
         search={{ status: "LIVE", sort: "apr", order: "desc", page: 0 }}
         to="/opportunities"
       >
@@ -216,4 +216,4 @@ function formatLabel(value: string) {
 }
 
 const paginationClassName =
-  "inline-flex min-h-11 min-w-24 items-center justify-center rounded-lg border border-slate-700 px-3 text-sm font-medium text-slate-200 transition hover:border-slate-600 hover:bg-slate-800 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-300";
+  "inline-flex min-h-11 min-w-24 items-center justify-center rounded-lg border border-line px-3 text-sm font-medium text-secondary transition hover:border-line-strong hover:bg-elevated hover:text-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent";

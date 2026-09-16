@@ -42,19 +42,19 @@ function OpportunityDetailPage() {
 function OpportunityDetailPending() {
   return (
     <section aria-busy="true" aria-label="Loading opportunity details">
-      <div className="h-11 w-44 animate-pulse rounded bg-slate-900" />
-      <div className="mt-5 h-64 animate-pulse rounded-2xl border border-slate-800 bg-slate-900/70" />
+      <div className="h-11 w-44 animate-pulse rounded bg-surface" />
+      <div className="mt-5 h-64 animate-pulse rounded-xl border border-line bg-surface" />
       <div className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
         {Array.from({ length: 5 }, (_, index) => (
           <div
-            className="h-24 animate-pulse rounded-xl border border-slate-800 bg-slate-900/70"
+            className="h-24 animate-pulse rounded-xl border border-line bg-surface"
             key={index}
           />
         ))}
       </div>
       <div className="mt-10 grid gap-4 lg:grid-cols-2">
-        <div className="h-64 animate-pulse rounded-2xl border border-slate-800 bg-slate-900/70" />
-        <div className="h-64 animate-pulse rounded-2xl border border-slate-800 bg-slate-900/70" />
+        <div className="h-64 animate-pulse rounded-xl border border-line bg-surface" />
+        <div className="h-64 animate-pulse rounded-xl border border-line bg-surface" />
       </div>
     </section>
   )
@@ -64,15 +64,15 @@ function OpportunityDetailError() {
   const router = useRouter()
 
   return (
-    <section className="rounded-2xl border border-red-950 bg-red-950/20 px-6 py-12 text-center">
-      <h1 className="text-xl font-semibold text-white">
+    <section className="rounded-xl border border-line bg-surface px-6 py-12 text-center">
+      <h1 className="text-xl font-semibold text-foreground">
         Opportunity details are temporarily unavailable
       </h1>
-      <p className="mx-auto mt-2 max-w-md text-sm text-slate-400">
+      <p className="mx-auto mt-2 max-w-md text-sm text-secondary">
         We could not load the latest campaign data. Please try again.
       </p>
       <button
-        className="mt-5 min-h-11 rounded-lg bg-slate-100 px-4 text-sm font-semibold text-slate-950 hover:bg-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-300"
+        className="mt-5 min-h-11 rounded-lg bg-accent px-4 text-sm font-semibold text-canvas transition hover:bg-accent-hover focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
         onClick={() => void router.invalidate()}
         type="button"
       >
@@ -84,16 +84,16 @@ function OpportunityDetailError() {
 
 function OpportunityNotFound() {
   return (
-    <section className="rounded-2xl border border-slate-800 bg-slate-900/60 px-6 py-14 text-center">
-      <p className="text-sm font-medium text-emerald-300">Not found</p>
-      <h1 className="mt-2 text-2xl font-semibold text-white">
+    <section className="rounded-xl border border-line bg-surface px-6 py-14 text-center">
+      <p className="text-sm font-medium text-accent">Not found</p>
+      <h1 className="mt-2 text-2xl font-semibold text-foreground">
         This opportunity is no longer available
       </h1>
-      <p className="mx-auto mt-3 max-w-md text-sm text-slate-400">
+      <p className="mx-auto mt-3 max-w-md text-sm text-secondary">
         It may have ended, moved, or the opportunity ID may be incorrect.
       </p>
       <Link
-        className="mt-6 inline-flex min-h-11 items-center rounded-lg bg-slate-100 px-4 text-sm font-semibold text-slate-950 hover:bg-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-300"
+        className="mt-6 inline-flex min-h-11 items-center rounded-lg bg-accent px-4 text-sm font-semibold text-canvas transition hover:bg-accent-hover focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
         to="/opportunities"
       >
         Back to opportunities

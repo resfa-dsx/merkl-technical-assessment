@@ -24,21 +24,21 @@ export function OpportunityDetail({
   return (
     <article>
       <Link
-        className="inline-flex min-h-11 items-center text-sm font-medium text-slate-400 transition hover:text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-300"
+        className="inline-flex min-h-11 items-center text-sm font-medium text-secondary transition hover:text-accent-hover focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
         to="/opportunities"
       >
         ← Back to opportunities
       </Link>
 
-      <header className="mt-5 rounded-2xl border border-slate-800 bg-slate-900/70 p-5 sm:p-7">
+      <header className="mt-5 rounded-xl border border-line bg-surface p-5 sm:p-7">
         <div className="flex flex-col gap-6 sm:flex-row sm:items-start sm:justify-between">
           <div className="flex min-w-0 items-start gap-4">
             <ResourceIcon name={identity.name} src={identity.iconUrl} />
             <div className="min-w-0">
-              <p className="text-sm font-semibold uppercase tracking-wide text-emerald-300">
+              <p className="text-sm font-semibold uppercase tracking-wide text-accent">
                 {opportunity.protocol?.name ?? opportunity.chain.name}
               </p>
-              <h1 className="mt-1 text-2xl font-semibold tracking-tight text-white sm:text-3xl">
+              <h1 className="mt-1 text-2xl font-semibold tracking-tight text-foreground sm:text-3xl">
                 {opportunity.name}
               </h1>
               <div className="mt-3 flex flex-wrap gap-2 text-xs">
@@ -53,7 +53,7 @@ export function OpportunityDetail({
 
           {opportunity.depositUrl ? (
             <a
-              className="inline-flex min-h-11 shrink-0 items-center justify-center rounded-lg bg-emerald-300 px-4 text-sm font-semibold text-slate-950 transition hover:bg-emerald-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-300"
+              className="inline-flex min-h-11 shrink-0 items-center justify-center rounded-lg bg-accent px-4 text-sm font-semibold text-canvas transition hover:bg-accent-hover focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
               href={opportunity.depositUrl}
               rel="noopener noreferrer"
               target="_blank"
@@ -64,7 +64,7 @@ export function OpportunityDetail({
         </div>
 
         {opportunity.description ? (
-          <p className="mt-6 max-w-3xl leading-7 text-slate-300">
+          <p className="mt-6 max-w-3xl leading-7 text-secondary">
             {opportunity.description}
           </p>
         ) : null}
@@ -73,7 +73,7 @@ export function OpportunityDetail({
           <div className="mt-6 flex flex-wrap gap-2" aria-label="Tokens">
             {opportunity.tokens.map((token, index) => (
               <span
-                className="inline-flex items-center gap-2 rounded-full border border-slate-700 bg-slate-800/80 py-1 pl-1 pr-3 text-sm text-slate-200"
+                className="inline-flex items-center gap-2 rounded-full border border-line bg-elevated py-1 pl-1 pr-3 text-sm text-secondary"
                 key={`${token.symbol}-${index}`}
               >
                 <span className="[&>img]:size-7 [&>img]:rounded-full [&>span]:size-7 [&>span]:rounded-full">
@@ -117,19 +117,19 @@ export function OpportunityDetail({
       {opportunity.howToSteps.length > 0 ? (
         <section
           aria-labelledby="participate-heading"
-          className="mt-10 rounded-2xl border border-slate-800 bg-slate-900/50 p-5 sm:p-6"
+          className="mt-10 rounded-xl border border-line bg-surface p-5 sm:p-6"
         >
-          <p className="text-sm font-medium text-emerald-300">How it works</p>
+          <p className="text-sm font-medium text-accent">How it works</p>
           <h2
-            className="mt-1 text-xl font-semibold text-white"
+            className="mt-1 text-xl font-semibold text-foreground"
             id="participate-heading"
           >
             How to participate
           </h2>
           <ol className="mt-5 space-y-4">
             {opportunity.howToSteps.map((step, index) => (
-              <li className="flex gap-3 text-slate-300" key={`${step}-${index}`}>
-                <span className="flex size-7 shrink-0 items-center justify-center rounded-full bg-slate-800 text-xs font-semibold text-emerald-300">
+              <li className="flex gap-3 text-secondary" key={`${step}-${index}`}>
+                <span className="flex size-7 shrink-0 items-center justify-center rounded-full bg-elevated text-xs font-semibold text-accent">
                   {index + 1}
                 </span>
                 <span className="pt-0.5 leading-6">{step}</span>
@@ -141,14 +141,14 @@ export function OpportunityDetail({
 
       <section aria-labelledby="campaigns-heading" className="mt-10">
         <div>
-          <p className="text-sm font-medium text-emerald-300">Rewards</p>
+          <p className="text-sm font-medium text-accent">Rewards</p>
           <h2
-            className="mt-1 text-2xl font-semibold text-white"
+            className="mt-1 text-2xl font-semibold text-foreground"
             id="campaigns-heading"
           >
             Campaigns
           </h2>
-          <p className="mt-2 text-sm text-slate-400">
+          <p className="mt-2 text-sm text-secondary">
             Reward campaigns currently attached to this opportunity.
           </p>
         </div>
@@ -160,7 +160,7 @@ export function OpportunityDetail({
             ))}
           </div>
         ) : (
-          <div className="mt-5 rounded-2xl border border-dashed border-slate-700 bg-slate-900/40 px-6 py-10 text-center text-sm text-slate-400">
+          <div className="mt-5 rounded-xl border border-dashed border-line-strong bg-surface px-6 py-10 text-center text-sm text-secondary">
             No campaign details are currently available.
           </div>
         )}
@@ -175,7 +175,7 @@ function CampaignCard({ campaign }: { campaign: CampaignSummary }) {
     : campaign.rewardToken.symbol
 
   return (
-    <article className="min-w-0 rounded-2xl border border-slate-800 bg-slate-900/70 p-5">
+    <article className="min-w-0 rounded-xl border border-line bg-surface p-5">
       <div className="flex min-w-0 items-start justify-between gap-4">
         <div className="flex min-w-0 items-center gap-3">
           <ResourceIcon
@@ -183,10 +183,10 @@ function CampaignCard({ campaign }: { campaign: CampaignSummary }) {
             src={campaign.rewardToken.iconUrl}
           />
           <div className="min-w-0">
-            <p className="text-xs uppercase tracking-wide text-slate-500">
+            <p className="text-xs uppercase tracking-wide text-muted">
               Reward token
             </p>
-            <h3 className="truncate font-semibold text-white">
+            <h3 className="truncate font-semibold text-foreground">
               {rewardTokenName}
             </h3>
           </div>
@@ -194,7 +194,7 @@ function CampaignCard({ campaign }: { campaign: CampaignSummary }) {
         {campaign.status ? <Badge>{formatLabel(campaign.status)}</Badge> : null}
       </div>
 
-      <dl className="mt-5 grid grid-cols-2 gap-4 border-y border-slate-800 py-4">
+      <dl className="mt-5 grid grid-cols-2 gap-4 border-y border-line py-4">
         <CampaignMetric
           label="Campaign APR"
           value={
@@ -242,10 +242,10 @@ function MetricCard({
   value: string
 }) {
   return (
-    <dl className="rounded-xl border border-slate-800 bg-slate-900/70 p-4">
-      <dt className="text-xs text-slate-500">{label}</dt>
+    <dl className="rounded-xl border border-line bg-surface p-4">
+      <dt className="text-xs text-muted">{label}</dt>
       <dd
-        className={`mt-1 text-xl font-semibold tabular-nums ${accent ? 'text-emerald-300' : 'text-white'}`}
+        className={`mt-1 text-xl font-semibold tabular-nums ${accent ? 'text-positive' : 'text-foreground'}`}
       >
         {value}
       </dd>
@@ -256,8 +256,8 @@ function MetricCard({
 function CampaignMetric({ label, value }: { label: string; value: string }) {
   return (
     <div className="min-w-0">
-      <dt className="text-xs text-slate-500">{label}</dt>
-      <dd className="mt-1 break-words font-medium text-slate-200">{value}</dd>
+      <dt className="text-xs text-muted">{label}</dt>
+      <dd className="mt-1 break-words font-medium text-secondary">{value}</dd>
     </div>
   )
 }
@@ -273,8 +273,8 @@ function Badge({
     <span
       className={
         accent
-          ? 'shrink-0 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-2.5 py-1 text-emerald-300'
-          : 'shrink-0 rounded-full border border-slate-700 bg-slate-800/80 px-2.5 py-1 text-slate-300'
+          ? 'shrink-0 rounded-full border border-positive/25 bg-positive/10 px-2.5 py-1 text-positive'
+          : 'shrink-0 rounded-full border border-line bg-elevated px-2.5 py-1 text-secondary'
       }
     >
       {children}

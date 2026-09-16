@@ -14,7 +14,7 @@ export function ResourceIcon({
     return (
       <span
         aria-hidden="true"
-        className="flex size-11 shrink-0 items-center justify-center rounded-xl bg-slate-800 text-xs font-semibold text-slate-300"
+        className="flex size-11 shrink-0 items-center justify-center rounded-lg border border-line bg-elevated text-xs font-semibold text-secondary"
       >
         {fallback}
       </span>
@@ -24,7 +24,7 @@ export function ResourceIcon({
   return (
     <img
       alt=""
-      className="size-11 shrink-0 rounded-xl bg-slate-800 object-cover"
+      className="size-11 shrink-0 rounded-lg bg-elevated object-cover"
       height="44"
       onError={() => setFailed(true)}
       src={src}

@@ -28,11 +28,11 @@ function OpportunitiesPage() {
   return (
     <section>
       <div className="mb-8">
-        <p className="text-sm font-medium text-emerald-300">Opportunities</p>
-        <h1 className="mt-2 text-3xl font-semibold tracking-tight sm:text-4xl">
+        <p className="text-sm font-medium text-accent">Opportunities</p>
+        <h1 className="mt-2 text-3xl font-semibold tracking-tight text-foreground sm:text-4xl">
           Explore opportunities
         </h1>
-        <p className="mt-3 max-w-2xl text-slate-400">
+        <p className="mt-3 max-w-2xl text-secondary">
           Compare yield opportunities across chains and protocols using live
           data from Merkl.
         </p>
@@ -41,8 +41,8 @@ function OpportunitiesPage() {
       <OpportunityFilters query={query} />
 
       <div className="mt-8">
-        <h2 className="text-xl font-semibold text-white">Results</h2>
-        <p className="mt-1 text-sm text-slate-400">
+        <h2 className="text-xl font-semibold text-foreground">Results</h2>
+        <p className="mt-1 text-sm text-muted">
           {data.items.length}{' '}
           {data.items.length === 1 ? 'opportunity' : 'opportunities'} on this
           page
@@ -59,13 +59,13 @@ function OpportunitiesPage() {
 function OpportunitiesPending() {
   return (
     <section aria-busy="true" aria-label="Loading opportunities">
-      <div className="h-8 w-64 animate-pulse rounded bg-slate-800" />
-      <div className="mt-3 h-5 w-full max-w-xl animate-pulse rounded bg-slate-900" />
-      <div className="mt-8 h-52 animate-pulse rounded-2xl border border-slate-800 bg-slate-900/70" />
+      <div className="h-8 w-64 animate-pulse rounded bg-elevated" />
+      <div className="mt-3 h-5 w-full max-w-xl animate-pulse rounded bg-surface" />
+      <div className="mt-8 h-52 animate-pulse rounded-xl border border-line bg-surface" />
       <div className="mt-8 space-y-3">
         {Array.from({ length: 4 }, (_, index) => (
           <div
-            className="h-36 animate-pulse rounded-xl border border-slate-800 bg-slate-900/70"
+            className="h-36 animate-pulse rounded-xl border border-line bg-surface"
             key={index}
           />
         ))}
@@ -78,15 +78,15 @@ function OpportunitiesError() {
   const router = useRouter()
 
   return (
-    <section className="rounded-2xl border border-red-950 bg-red-950/20 px-6 py-12 text-center">
-      <h1 className="text-xl font-semibold text-white">
+    <section className="rounded-xl border border-line bg-surface px-6 py-12 text-center">
+      <h1 className="text-xl font-semibold text-foreground">
         Opportunities are temporarily unavailable
       </h1>
-      <p className="mx-auto mt-2 max-w-md text-sm text-slate-400">
+      <p className="mx-auto mt-2 max-w-md text-sm text-secondary">
         We could not load the latest opportunity data. Please try again.
       </p>
       <button
-        className="mt-5 min-h-11 rounded-lg bg-slate-100 px-4 text-sm font-semibold text-slate-950 hover:bg-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-300"
+        className="mt-5 min-h-11 rounded-lg bg-accent px-4 text-sm font-semibold text-canvas transition hover:bg-accent-hover focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
         onClick={() => void router.invalidate()}
         type="button"
       >
