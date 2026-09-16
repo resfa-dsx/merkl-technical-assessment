@@ -1,5 +1,7 @@
 import {
   HeadContent,
+  Link,
+  Outlet,
   Scripts,
   createRootRouteWithContext,
 } from '@tanstack/react-router'
@@ -27,7 +29,7 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
         content: 'width=device-width, initial-scale=1',
       },
       {
-        title: 'TanStack Start Starter',
+        title: 'Merkl Opportunity Explorer',
       },
     ],
     links: [
@@ -37,17 +39,52 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
       },
     ],
   }),
-  shellComponent: RootDocument,
+  component: RootComponent,
 })
 
-function RootDocument({ children }: { children: React.ReactNode }) {
+function RootComponent() {
   return (
     <html lang="en">
       <head>
         <HeadContent />
       </head>
-      <body>
-        {children}
+      <body className="bg-slate-950 text-slate-100 antialiased">
+        <div className="flex min-h-screen flex-col">
+          <header className="border-b border-slate-800">
+            <div className="mx-auto flex w-full max-w-6xl items-center justify-between gap-6 px-4 py-4 sm:px-6">
+              <Link className="font-semibold tracking-tight" to="/opportunities">
+                Merkl Opportunity Explorer
+              </Link>
+              <nav aria-label="Primary navigation">
+                <Link
+                  activeProps={{ className: 'text-emerald-300' }}
+                  className="text-sm text-slate-300 hover:text-white"
+                  to="/opportunities"
+                >
+                  Opportunities
+                </Link>
+              </nav>
+            </div>
+          </header>
+
+          <main className="mx-auto w-full max-w-6xl flex-1 px-4 py-10 sm:px-6">
+            <Outlet />
+          </main>
+
+          <footer className="border-t border-slate-800">
+            <div className="mx-auto w-full max-w-6xl px-4 py-4 text-sm text-slate-400 sm:px-6">
+              Data provided by{' '}
+              <a
+                className="underline decoration-slate-600 underline-offset-4 hover:text-slate-200"
+                href="https://merkl.xyz"
+                rel="noreferrer"
+                target="_blank"
+              >
+                Merkl
+              </a>
+            </div>
+          </footer>
+        </div>
         <TanStackDevtools
           config={{
             position: 'bottom-right',
