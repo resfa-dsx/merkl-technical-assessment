@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as OpportunitiesIndexRouteImport } from './routes/opportunities/index'
+import { Route as OpportunitiesOpportunityIdRouteImport } from './routes/opportunities/$opportunityId'
 import { Route as ApiOpportunitiesIndexRouteImport } from './routes/api/opportunities/index'
 import { Route as ApiOpportunitiesOpportunityIdRouteImport } from './routes/api/opportunities/$opportunityId'
 
@@ -24,6 +25,12 @@ const OpportunitiesIndexRoute = OpportunitiesIndexRouteImport.update({
   path: '/opportunities/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const OpportunitiesOpportunityIdRoute =
+  OpportunitiesOpportunityIdRouteImport.update({
+    id: '/opportunities/$opportunityId',
+    path: '/opportunities/$opportunityId',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const ApiOpportunitiesIndexRoute = ApiOpportunitiesIndexRouteImport.update({
   id: '/api/opportunities/',
   path: '/api/opportunities/',
@@ -38,12 +45,14 @@ const ApiOpportunitiesOpportunityIdRoute =
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/opportunities/$opportunityId': typeof OpportunitiesOpportunityIdRoute
   '/opportunities/': typeof OpportunitiesIndexRoute
   '/api/opportunities/$opportunityId': typeof ApiOpportunitiesOpportunityIdRoute
   '/api/opportunities/': typeof ApiOpportunitiesIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/opportunities/$opportunityId': typeof OpportunitiesOpportunityIdRoute
   '/opportunities': typeof OpportunitiesIndexRoute
   '/api/opportunities/$opportunityId': typeof ApiOpportunitiesOpportunityIdRoute
   '/api/opportunities': typeof ApiOpportunitiesIndexRoute
@@ -51,6 +60,7 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/opportunities/$opportunityId': typeof OpportunitiesOpportunityIdRoute
   '/opportunities/': typeof OpportunitiesIndexRoute
   '/api/opportunities/$opportunityId': typeof ApiOpportunitiesOpportunityIdRoute
   '/api/opportunities/': typeof ApiOpportunitiesIndexRoute
@@ -59,18 +69,21 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/opportunities/$opportunityId'
     | '/opportunities/'
     | '/api/opportunities/$opportunityId'
     | '/api/opportunities/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/opportunities/$opportunityId'
     | '/opportunities'
     | '/api/opportunities/$opportunityId'
     | '/api/opportunities'
   id:
     | '__root__'
     | '/'
+    | '/opportunities/$opportunityId'
     | '/opportunities/'
     | '/api/opportunities/$opportunityId'
     | '/api/opportunities/'
@@ -78,6 +91,7 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  OpportunitiesOpportunityIdRoute: typeof OpportunitiesOpportunityIdRoute
   OpportunitiesIndexRoute: typeof OpportunitiesIndexRoute
   ApiOpportunitiesOpportunityIdRoute: typeof ApiOpportunitiesOpportunityIdRoute
   ApiOpportunitiesIndexRoute: typeof ApiOpportunitiesIndexRoute
@@ -99,6 +113,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof OpportunitiesIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/opportunities/$opportunityId': {
+      id: '/opportunities/$opportunityId'
+      path: '/opportunities/$opportunityId'
+      fullPath: '/opportunities/$opportunityId'
+      preLoaderRoute: typeof OpportunitiesOpportunityIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/opportunities/': {
       id: '/api/opportunities/'
       path: '/api/opportunities'
@@ -118,6 +139,7 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  OpportunitiesOpportunityIdRoute: OpportunitiesOpportunityIdRoute,
   OpportunitiesIndexRoute: OpportunitiesIndexRoute,
   ApiOpportunitiesOpportunityIdRoute: ApiOpportunitiesOpportunityIdRoute,
   ApiOpportunitiesIndexRoute: ApiOpportunitiesIndexRoute,

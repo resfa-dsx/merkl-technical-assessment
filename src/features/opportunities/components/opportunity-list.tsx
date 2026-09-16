@@ -1,5 +1,4 @@
 import { Link } from "@tanstack/react-router";
-import { useState } from "react";
 import type { ReactNode } from "react";
 
 import type {
@@ -9,6 +8,8 @@ import type {
 } from "../types/opportunity";
 
 import { formatPercentage, formatUsd } from "#/lib/formatters";
+
+import { ResourceIcon } from "./resource-icon";
 
 export function OpportunityList({
   data,
@@ -37,9 +38,10 @@ function OpportunityRow({ opportunity }: { opportunity: OpportunityListItem }) {
   const identity = opportunity.protocol ?? opportunity.chain;
 
   return (
-    <a
+    <Link
       className="group block rounded-xl border border-slate-800 bg-slate-900/70 p-4 transition hover:border-slate-700 hover:bg-slate-900 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-300"
-      href={`/opportunities/${opportunity.id}`}
+      params={{ opportunityId: opportunity.id }}
+      to="/opportunities/$opportunityId"
     >
       <article className="grid min-w-0 gap-5 lg:grid-cols-[minmax(0,1fr)_150px_110px_140px_auto] lg:items-center">
         <div className="flex min-w-0 items-start gap-3.5">
@@ -91,34 +93,7 @@ function OpportunityRow({ opportunity }: { opportunity: OpportunityListItem }) {
           View →
         </span>
       </article>
-    </a>
-  );
-}
-
-function ResourceIcon({ name, src }: { name: string; src: string | null }) {
-  const [failed, setFailed] = useState(false);
-  const fallback = name.trim().slice(0, 2).toUpperCase() || "OP";
-
-  if (src === null || failed) {
-    return (
-      <span
-        aria-hidden="true"
-        className="flex size-11 shrink-0 items-center justify-center rounded-xl bg-slate-800 text-xs font-semibold text-slate-300"
-      >
-        {fallback}
-      </span>
-    );
-  }
-
-  return (
-    <img
-      alt=""
-      className="size-11 shrink-0 rounded-xl bg-slate-800 object-cover"
-      height="44"
-      onError={() => setFailed(true)}
-      src={src}
-      width="44"
-    />
+    </Link>
   );
 }
 

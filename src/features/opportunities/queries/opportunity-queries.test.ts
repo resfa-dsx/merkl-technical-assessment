@@ -22,4 +22,12 @@ describe('opportunityKeys', () => {
       { status: 'LIVE', sort: 'apr', order: 'desc', page: 0 },
     ])
   })
+
+  it('keys detail data by opportunity ID', () => {
+    expect(opportunityKeys.detail('11521673201667687989')).toEqual([
+      'opportunities',
+      'detail',
+      '11521673201667687989',
+    ])
+  })
 })

@@ -52,6 +52,7 @@ export async function fetchOpportunityDetail(
     `opportunities/${encodedId}/campaigns`,
     MERKL_API_BASE_URL,
   )
+  url.searchParams.set('campaigns', 'true')
   const opportunity = await requestMerkl(url, merklOpportunityDetailSchema)
   return mapMerklOpportunityDetail(opportunity)
 }

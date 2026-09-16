@@ -121,6 +121,7 @@ describe('fetchOpportunityDetail', () => {
     expect(new URL(String(request)).pathname).toBe(
       '/v4/opportunities/11521673201667687989/campaigns',
     )
+    expect(new URL(String(request)).searchParams.get('campaigns')).toBe('true')
     expect(result).toMatchObject({
       id: '11521673201667687989',
       campaigns: [],

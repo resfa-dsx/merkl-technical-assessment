@@ -2,7 +2,10 @@ import { queryOptions } from '@tanstack/react-query'
 
 import type { OpportunityListQuery } from '../types/opportunity'
 
-import { getOpportunityList } from '../api/opportunity-functions'
+import {
+  getOpportunityDetail,
+  getOpportunityList,
+} from '../api/opportunity-functions'
 
 export const opportunityKeys = {
   all: ['opportunities'] as const,
@@ -12,6 +15,8 @@ export const opportunityKeys = {
       'list',
       normalizeOpportunityListQuery(query),
     ] as const,
+  detail: (opportunityId: string) =>
+    [...opportunityKeys.all, 'detail', opportunityId] as const,
 }
 
 export function opportunityListQueryOptions(query: OpportunityListQuery) {
@@ -20,6 +25,14 @@ export function opportunityListQueryOptions(query: OpportunityListQuery) {
   return queryOptions({
     queryKey: opportunityKeys.list(normalizedQuery),
     queryFn: () => getOpportunityList({ data: normalizedQuery }),
+    staleTime: 60_000,
+  })
+}
+
+export function opportunityDetailQueryOptions(opportunityId: string) {
+  return queryOptions({
+    queryKey: opportunityKeys.detail(opportunityId),
+    queryFn: () => getOpportunityDetail({ data: { opportunityId } }),
     staleTime: 60_000,
   })
 }
